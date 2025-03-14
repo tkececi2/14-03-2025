@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Temel fonksiyonlar
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/kullanicilar/$(request.auth.uid)).data.rol == 'yonetici';
+    }
+    
+    function isTechnician() {
+      let user = get(/databases/$(database)/documents/kullanicilar/$(request.auth.uid));
+      return isAuthenticated() && 
+        (user.data.rol == 'tekniker' || user.data.rol == 'muhendis');
+    }
+    
+    function isCustomer() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/kullanicilar/$(request.auth.uid)).data.rol == 'musteri';
+    }
+    
+    function hasAccessToSaha(sahaId) {
+      let user = get(/databases/$(database)/documents/kullanicilar/$(request.auth.uid));
+      return user.data.sahalar != null && sahaId in user.data.sahalar;
+    }
+
+    // Stok koleksiyonu
+    match /stoklar/{stokId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        isTechnician() || 
+        (isCustomer() && hasAccessToSaha(resource.data.sahaId))
+      );
+      allow create: if isAuthenticated() && (isAdmin() || isTechnician());
+      allow update: if isAuthenticated() && (isAdmin() || isTechnician());
+      allow delete: if isAdmin();
+    }
+
+    // Diğer koleksiyonların kuralları aynı kalacak
+    match /elektrikBakimlar/{bakimId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && (isAdmin() || isTechnician());
+      allow update: if isAuthenticated() && (isAdmin() || isTechnician());
+      allow delete: if isAdmin();
+    }
+
+    // ... Diğer koleksiyonların kuralları devam eder
+  }
+}

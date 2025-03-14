@@ -1,0 +1,71 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "mekanikBakimlar",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "sahaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tarih",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "mekanikBakimlar",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "kontrolEden.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tarih",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "mekanikBakimlar",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "tarih",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "mekanikBakimlar",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "sahaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tarih",
+          "arrayConfig": "CONTAINS"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "mekanikBakimlar",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "sahaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tarih",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
